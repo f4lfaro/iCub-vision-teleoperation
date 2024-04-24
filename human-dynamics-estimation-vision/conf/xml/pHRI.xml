@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE robot PUBLIC "-//YARP//DTD yarprobotinterface 3.0//EN" "http://www.yarp.it/DTD/yarprobotinterfaceV3.0.dtd">
+<robot name="pHRI-HDE" build=0 portprefix="">
+
+    <device type="transformServer" name="TransformServer">
+        <param name="period">0.01</param>
+        <param name="transforms_lifetime">0.2</param>
+        <group name="ROS">
+            <param name="enable_ros_publisher">true</param>
+            <param name="enable_ros_subscriber">false</param>
+        </group>
+    </device>
+
+    <device type="iwear_remapper" name="XSenseIWearRemapper">
+        <param name="wearableDataPorts">(/XSensSuit/WearableData/data:o)</param>
+        <param name="useRPC">false</param>
+        <param name="wearableRPCPorts">(/XSensSuit/WearableData/metadataRpc:o)</param>
+        <param name="outputPortName">/HDE/XsensIWearRemapper/data:o</param>
+    </device>
+
+    <device type="human_state_provider" name="HumanStateProvider">
+        <param name="period">0.02</param>
+        <param name="urdf">humanSubject01_66dof.urdf</param>
+        <param name="floatingBaseFrame">Pelvis</param>
+        <!-- ikSolver options: pairwised, global, dynamical -->
+        <param name="ikSolver">dynamical</param>
+        <param name="allowIKFailures">true</param>
+        <param name="useDirectBaseMeasurement">false</param>
+        <!-- optimization parameters -->
+        <param name="maxIterationsIK">300</param>
+        <param name="ikLinearSolver">ma27</param>
+        <param name="ikPoolSizeOption">2</param>
+        <param name="posTargetWeight">0.0</param>
+        <param name="rotTargetWeight">1.0</param>
+        <param name="costRegularization">0.000001</param>
+        <param name="costTolerance">0.001</param>
+        <!-- inverse velocity kinematics parameters -->
+        <!-- inverseVelocityKinematicsSolver values:
+        QP
+        moorePenrose,
+        completeOrthogonalDecomposition,
+        leastSquare,
+        choleskyDecomposition,
+        sparseCholeskyDecomposition,
+        robustCholeskyDecomposition,
+        sparseRobustCholeskyDecomposition -->
+        <param name='inverseVelocityKinematicsSolver'>sparseRobustCholeskyDecomposition</param>
+        <param name="linVelTargetWeight">1.0</param>
+        <param name="angVelTargetWeight">1.0</param>
+        <!-- integration based IK parameters -->
+        <param name='dynamicalIKJointVelocityLimit'>10.0</param> <!-- comment or -1.0 for no limits -->
+        <param name="dynamicalIKMeasuredVelocityGainLinRot">(1.0 1.0)</param>
+        <param name="dynamicalIKCorrectionGainsLinRot">(8.0 20.0)</param>
+        <param name="dynamicalIKIntegralCorrectionGainsLinRot">(0.0 0.0)</param>
+        <group name="WEARABLE_SENSOR_TARGETS">
+            <!-- LinkName, WearableSensorName, TargetType-->
+            <!-- TargetType : {pose, poseAndVelocity, position, positionAndVelocity, orientation, orientationAndVelocity}-->
+            <param name="target_Pelvis">(Pelvis, XsensSuit::vLink::Pelvis, poseAndVelocity)</param>
+            <param name="target_L5">(L5, XsensSuit::vLink::L5, orientationAndVelocity)</param>
+            <param name="target_L3">(L3, XsensSuit::vLink::L3, orientationAndVelocity)</param>
+            <param name="target_T12">(T12, XsensSuit::vLink::T12, orientationAndVelocity)</param>
+            <param name="target_T8">(T8, XsensSuit::vLink::T8, orientationAndVelocity)</param>
+            <param name="target_Neck">(Neck, XsensSuit::vLink::Neck, orientationAndVelocity)</param>
+            <param name="target_Head">(Head, XsensSuit::vLink::Head, orientationAndVelocity)</param>
+            <param name="target_RightShoulder">(RightShoulder, XsensSuit::vLink::RightShoulder, orientationAndVelocity)</param>
+            <param name="target_RightUpperArm">(RightUpperArm, XsensSuit::vLink::RightUpperArm, orientationAndVelocity)</param>
+            <param name="target_RightForeArm">(RightForeArm, XsensSuit::vLink::RightForeArm, orientationAndVelocity)</param>
+            <param name="target_RightHand">(RightHand, XsensSuit::vLink::RightHand, orientationAndVelocity)</param>
+            <param name="target_LeftShoulder">(LeftShoulder, XsensSuit::vLink::LeftShoulder, orientationAndVelocity)</param>
+            <param name="target_LeftUpperArm">(LeftUpperArm, XsensSuit::vLink::LeftUpperArm, orientationAndVelocity)</param>
+            <param name="target_LeftForeArm">(LeftForeArm, XsensSuit::vLink::LeftForeArm, orientationAndVelocity)</param>
+            <param name="target_LeftHand">(LeftHand, XsensSuit::vLink::LeftHand, orientationAndVelocity)</param>
+            <param name="target_RightUpperLeg">(RightUpperLeg, XsensSuit::vLink::RightUpperLeg, orientationAndVelocity)</param>
+            <param name="target_RightLowerLeg">(RightLowerLeg, XsensSuit::vLink::RightLowerLeg, orientationAndVelocity)</param>
+            <param name="target_RightFoot">(RightFoot, XsensSuit::vLink::RightFoot, orientationAndVelocity)</param>
+            <param name="target_RightToe">(RightToe, XsensSuit::vLink::RightToe, orientationAndVelocity)</param>
+            <param name="target_LeftUpperLeg">(LeftUpperLeg, XsensSuit::vLink::LeftUpperLeg, orientationAndVelocity)</param>
+            <param name="target_LeftLowerLeg">(LeftLowerLeg, XsensSuit::vLink::LeftLowerLeg, orientationAndVelocity)</param>
+            <param name="target_LeftFoot">(LeftFoot, XsensSuit::vLink::LeftFoot, orientationAndVelocity)</param>
+            <param name="target_LeftToe">(LeftToe, XsensSuit::vLink::LeftToe, orientationAndVelocity)</param>
+        </group>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanStateProviderLabel">XSenseIWearRemapper</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+    <!-- Uncomment to stream the output of HumanStateProvider on a YARP port -->
+    <!-- <device type="human_state_wrapper" name="HumanStateWrapper">
+        <param name="period">0.02</param>
+        <param name="outputPort">/HDE/HumanStateWrapper/state:o</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanStateWrapperLabel">HumanStateProvider</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device> -->
+
+    <device type="human_state_publisher" name="HumanStatePublisher">
+        <param name="period">0.02</param>
+        <param name="baseTFName">/Human/Pelvis</param>
+        <param name="humanJointsTopic">/Human/joint_states</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanStatePublisherLabel">HumanStateProvider</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+    <device type="iwear_remapper" name="FTSourcesIWearRemapper">
+        <param name="wearableDataPorts">(/FTShoeLeft/WearableData/data:o /FTShoeRight/WearableData/data:o /ICub/WearableData/data:o)</param>
+        <param name="useRPC">false</param>
+        <param name="wearableRPCPorts">(/FTShoeLeft/WearableData/metadataRpc:o /FTShoeRight/WearableData/metadataRpc:o /ICub/WearableData/metadataRpc:o)</param>
+        <param name="outputPortName">/HDE/FTSourcesIWearRemapper/data:o</param>
+    </device>
+
+    <device type="human_wrench_provider" name="HumanWrenchProvider">
+        <param name="period">0.02</param>
+        <param name="human_urdf">humanSubject01_66dof.urdf</param>
+        <param name="pHRIScenario">true</param>
+        <param name="robot_urdf">model.urdf</param>
+        <param name="number_of_source_devices">3</param>
+        <param name="sources">(FTShoeLeft FTShoeRight RobotLeftHandFT RobotRightHandFT)</param>
+        <group name="FTShoeLeft">
+            <param name="sensorName">FTShoeLeftFTSensors</param>
+            <param name="outputFrame">LeftFoot</param>
+            <param name="type">fixed</param>
+            <param name="rotation">(1.0 0.0 0.0
+                                    0.0 1.0 0.0
+                                    0.0 0.0 1.0)</param>
+            <param name="position">(-0.0026 0.0 -0.1208)</param>
+        </group>
+        <group name="FTShoeRight">
+            <param name="sensorName">FTShoeRightFTSensors</param>
+            <param name="outputFrame">RightFoot</param>
+            <param name="type">fixed</param>
+            <param name="rotation">(1.0 0.0 0.0
+                                    0.0 1.0 0.0
+                                    0.0 0.0 1.0)</param>
+            <param name="position">(-0.0026 0.0 -0.1208)</param>
+        </group>
+        <group name="RobotLeftHandFT">
+            <param name="sensorName">ICub::ft6D::leftWBDFTSensor</param>
+            <param name="outputFrame">RightHand</param>
+            <param name="type">robot</param>
+            <param name="rotation">(-1.0 0.0 0.0 0.0 -1.0 0.0 0.0 0.0 1.0)</param>
+            <param name="position">(0.59 0.0 0.0)</param>
+            <param name="humanLinkingFrame">RightFoot</param>
+            <param name="robotLinkingFrame">l_sole</param>
+            <param name="robotSourceOriginFrame">l_hand</param>
+            <param name="robotSourceOrientationFrame">root_link</param>
+            <param name="humanFootPosition">(0.0 0.0 0.0918)</param>
+        </group>
+        <group name="RobotRightHandFT">
+            <param name="sensorName">ICub::ft6D::rightWBDFTSensor</param>
+            <param name="outputFrame">LeftHand</param>
+            <param name="type">robot</param>
+            <param name="rotation">(-1.0 0.0 0.0 0.0 -1.0 0.0 0.0 0.0 1.0)</param>
+            <param name="position">(0.59 0.0 0.0)</param>
+            <param name="humanLinkingFrame">LeftFoot</param>
+            <param name="robotLinkingFrame">r_sole</param>
+            <param name="robotSourceOriginFrame">r_hand</param>
+            <param name="robotSourceOrientationFrame">root_link</param>
+            <param name="humanFootPosition">(0.0 0.0 0.0918)</param>
+        </group>
+        <group name="RobotJoints">
+            <param name="head">(neck_pitch neck_roll neck_yaw)</param>
+            <param name="torso">(torso_yaw torso_roll torso_pitch)</param>
+            <param name="left_arm">(l_shoulder_pitch l_shoulder_roll l_shoulder_yaw l_elbow l_wrist_prosup l_wrist_pitch l_wrist_yaw)</param>
+            <param name="right_arm">(r_shoulder_pitch r_shoulder_roll r_shoulder_yaw r_elbow r_wrist_prosup r_wrist_pitch r_wrist_yaw)</param>
+            <param name="left_leg">(l_hip_pitch l_hip_roll l_hip_yaw l_knee l_ankle_pitch l_ankle_roll)</param>
+            <param name="right_leg">(r_hip_pitch r_hip_roll r_hip_yaw r_knee r_ankle_pitch r_ankle_roll)</param>
+        </group>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanWrenchProviderLabelHumanStateProvider">HumanStateProvider</elem>
+                <elem name="HumanWrenchProviderLabelFTShoeLeft">FTSourcesIWearRemapper</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach" />
+    </device>
+
+    <!--device type="analogServer" name="HumanWrenchWrapper">
+        <param name="name">/HDE/HumanWrenchWrapper/wrench:o</param>
+        <param name="period">10</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanWrenchWrapperLabel">HumanWrenchProvider</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach" />
+    </device-->
+
+    <!--Wrapper to publish WrenchStamped message to Rviz-->
+    <device type="analogServer" name="HumanWrenchPublisher">
+        <param name="name">/HDE/HumanWrenchPublisher/wrench:o</param>
+        <param name="period">20</param>
+        <param name="channels">24</param>
+        <paramlist name="ports">
+            <elem name="FirstSetOfChannels">0 5 0 5</elem>
+            <elem name="SecondSetOfChannels">6 11 0 5</elem>
+            <elem name="ThirdSetOfChannels">12 17 0 5</elem>
+            <elem name="FourthSetOfChannels">18 23 0 5</elem>
+        </paramlist>
+        <group name="ROS">
+            <param name="useROS">true</param>
+            <param name="ROS_topicName">(/HDE/WrenchStamped/LeftFoot /HDE/WrenchStamped/RightFoot /HDE/WrenchStamped/RightHand /HDE/WrenchStamped/LeftHand)</param>
+            <param name="ROS_nodeName">/HDE/HumanWrenchPublisherNode</param>
+            <param name="ROS_msgType">geometry_msgs/WrenchStamped</param>
+            <param name="frame_id">(Human/LeftFoot Human/RightFoot Human/RightHand Human/LeftHand)</param>
+        </group>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanWrenchPublisherLabel">HumanWrenchProvider</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="4" type="detach" />
+    </device>
+
+    <device type="human_dynamics_estimator" name="HumanDynamicsEstimator">
+        <param name="period">0.02</param>
+        <param name="urdf">humanSubject01_66dof.urdf</param>
+        <param name="baseLink">Pelvis</param>
+        <param name="number_of_wrench_sensors">4</param>
+        <param name="wrench_sensors_link_name">(LeftFoot RightFoot RightHand LeftHand)</param>
+        <group name="PRIORS">
+            <param name="cov_dyn_variables">10000.0</param>
+            <param name="cov_dyn_constraints">0.0001</param>
+            <param name="mu_dyn_variables">0.0001</param>
+            <param name="cov_measurements_ACCELEROMETER_SENSOR">(0.0011 0.0011 0.0011)</param>
+            <param name="cov_measurements_DOF_ACCELERATION_SENSOR">0.666e-5</param>
+            <group name="cov_measurements_NET_EXT_WRENCH_SENSOR">
+                <param name="value">1e-6</param>
+                <param name="specific_elements">(LeftFoot RightFoot RightHand LeftHand)</param>
+                <param name="LeftFoot">(0.0589998348 0.0589998348 0.0359999712 0.002250000225 0.002250000225 0.56e-3)</param>
+                <param name="RightFoot">(0.0589998348 0.0589998348 0.0359999712 0.002250000225 0.002250000225 0.56e-3)</param>
+                <param name="RightHand">(0.0589998348 0.0589998348 0.0359999712 0.002250000225 0.002250000225 0.56e-3)</param>
+                <param name="LeftHand">(0.0589998348 0.0589998348 0.0359999712 0.002250000225 0.002250000225 0.56e-3)</param>
+            </group>
+        </group>
+        <group name="SENSORS_REMOVAL">
+            <param name="GYROSCOPE_SENSOR">*</param>
+        </group>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanDynamicsEstimatorLabel1">HumanStateProvider</elem>
+                <elem name="HumanDynamicsEstimatorLabel2">HumanWrenchProvider</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+    <!--device type="human_dynamics_wrapper" name="HumanDynamicsWrapper">
+        <param name="period">0.1</param>
+        <param name="outputPort">/HDE/HumanDynamicsWrapper/torques:o</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanDynamicsWrapperLabel">HumanDynamicsEstimator</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device-->
+
+    <device type="human_dynamics_publisher" name="HumanDynamicsPublisher">
+        <param name="period">0.010</param>
+        <param name="parentLinkNames">(LeftFoot LeftLowerLeg LeftUpperLeg LeftHand LeftForeArm LeftUpperArm RightFoot RightLowerLeg RightUpperLeg RightHand RightForeArm RightUpperArm)</param>
+        <param name="sphericalJointNames">(jLeftAnkle jLeftKnee jLeftHip jLeftWrist jLeftElbow jLeftShoulder jRightAnkle jRightKnee jRightHip jRightWrist jRightElbow jRightShoulder)</param>
+        <param name="topicPrefix">/HumanEffortBridge</param>
+        <param name="tfPrefix">Human</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanDynamicsPublisherLabel">HumanDynamicsEstimator</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="4" type="detach"/>
+    </device>
+
+    <device type="human_control_board" name="HumanControlBoard">
+        <param name="period">0.0100</param>
+        <param name="urdf">humanSubject03_66dof.urdf</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanControlBoardLabel1">HumanStateProvider</elem>
+                <elem name="HumanControlBoardLabel2">HumanDynamicsEstimator</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+    <device type="controlboardwrapper2" name="HumanControlBoardWrapper">
+        <param name="period">1</param>
+        <param name="name">/Human/HumanControlBoard</param>
+        <param name="joints">66</param>
+        <paramlist name="networks">
+            <elem name="HumanJoints">0 65 0 65</elem>
+        </paramlist>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanJoints">HumanControlBoard</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+    <!--Uncomment the following code if you need to dump wearable data-->
+    <device type="iwear_remapper" name="pHRIWearableData">
+        <param name="wearableDataPorts">(/XSensSuit/WearableData/data:o /FTShoeLeft/WearableData/data:o /FTShoeRight/WearableData/data:o /ICub/WearableData/data:o)</param>
+        <param name="useRPC">false</param>
+        <param name="wearableRPCPorts">(/XSensSuit/WearableData/metadataRpc:o /FTShoeLeft/WearableData/metadataRpc:o /FTShoeRight/WearableData/metadataRpc:o /ICub/WearableData/metadataRpc:o)</param>
+        <param name="outputPortName">/pHRI/IWearRemapper/data:o</param>
+    </device>
+
+    <device type="iwear_wrapper" name="pHRIWearableDataWrapper">
+        <param name="period">0.1</param>
+        <param name="dataPortName">/pHRI/WearableData/data:o</param>
+        <param name="rpcPortName">/pHRI/WearableData/metadataRpc:o</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="WearableDataWrapper">pHRIWearableData</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+</robot>

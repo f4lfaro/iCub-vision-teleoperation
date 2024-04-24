@@ -1,0 +1,12 @@
+hde/msgs/KinematicTargetType.h
+hde/msgs/KinematicTargetType.cpp
+hde/msgs/Vector3.h
+hde/msgs/Vector3.cpp
+hde/msgs/Quaternion.h
+hde/msgs/Quaternion.cpp
+hde/msgs/Transform.h
+hde/msgs/Transform.cpp
+hde/msgs/VisionTarget.h
+hde/msgs/VisionTarget.cpp
+hde/msgs/VisionTargets.h
+hde/msgs/VisionTargets.cpp

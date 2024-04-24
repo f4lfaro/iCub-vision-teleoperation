@@ -1,0 +1,111 @@
+<!DOCTYPE robot PUBLIC "-//YARP//DTD yarprobotinterface 3.0//EN" "http://www.yarp.it/DTD/yarprobotinterfaceV3.0.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="Human2-HDE" build=0 portprefix="">
+
+    <device type="iwear_remapper" name="XSenseIWearRemapper_2">
+        <param name="wearableDataPorts">(/XSensSuit/WearableData_2/data:o)</param>
+        <param name="useRPC">false</param>
+        <param name="wearableRPCPorts">(/XSensSuit/WearableData_2/metadataRpc:o)</param>
+        <param name="outputPortName">/HDE_2/XsensIWearRemapper/data:o</param>
+    </device>
+
+    <device type="human_state_provider" name="HumanStateProvider_2">
+        <param name="period">0.05</param>
+        <param name="urdf">humanSubject01_66dof.urdf</param>
+        <param name="floatingBaseFrame">Pelvis</param>
+        <param name="ikSolver">dynamical</param>
+        <param name="allowIKFailures">true</param>
+        <param name="useDirectBaseMeasurement">false</param>
+        <!-- optimization parameters -->
+        <param name="maxIterationsIK">300</param>
+        <param name="ikLinearSolver">ma27</param>
+        <param name="ikPoolSizeOption">2</param>
+        <param name="posTargetWeight">0.0</param>
+        <param name="rotTargetWeight">1.0</param>
+        <param name="costRegularization">0.000001</param>
+        <param name="costTolerance">0.001</param>
+        <!-- inverse velocity kinematics parameters -->
+        <param name="linVelTargetWeight">1.0</param>
+        <param name="angVelTargetWeight">1.0</param>
+        <param name="dynamicalIKMeasuredVelocityGainLinRot">(1.0 1.0)</param>
+        <!-- integration based IK parameters -->
+        <param name="dynamicalIKCorrectionGainsLinRot">(5.0 5.0)</param>
+        <param name="dynamicalIKIntegralCorrectionGainsLinRot">(0.0 0.0)</param>
+        <!-- TODO: How to use a reduced model in the entire HDE? (Starting from HumanStateProvider) -->
+        <group name="WEARABLE_SENSOR_TARGETS">
+            <!-- LinkName, WearableSensorName, TargetType-->
+            <!-- TargetType : {pose, poseAndVelocity, position, positionAndVelocity, orientation, orientationAndVelocity}-->
+            <param name="target_Pelvis">(Pelvis, XsensSuit::vLink::Pelvis, poseAndVelocity)</param>
+            <param name="target_L5">(L5, XsensSuit::vLink::L5, orientationAndVelocity)</param>
+            <param name="target_L3">(L3, XsensSuit::vLink::L3, orientationAndVelocity)</param>
+            <param name="target_T12">(T12, XsensSuit::vLink::T12, orientationAndVelocity)</param>
+            <param name="target_T8">(T8, XsensSuit::vLink::T8, orientationAndVelocity)</param>
+            <param name="target_Neck">(Neck, XsensSuit::vLink::Neck, orientationAndVelocity)</param>
+            <param name="target_Head">(Head, XsensSuit::vLink::Head, orientationAndVelocity)</param>
+            <param name="target_RightShoulder">(RightShoulder, XsensSuit::vLink::RightShoulder, orientationAndVelocity)</param>
+            <param name="target_RightUpperArm">(RightUpperArm, XsensSuit::vLink::RightUpperArm, orientationAndVelocity)</param>
+            <param name="target_RightForeArm">(RightForeArm, XsensSuit::vLink::RightForeArm, orientationAndVelocity)</param>
+            <param name="target_RightHand">(RightHand, XsensSuit::vLink::RightHand, orientationAndVelocity)</param>
+            <param name="target_LeftShoulder">(LeftShoulder, XsensSuit::vLink::LeftShoulder, orientationAndVelocity)</param>
+            <param name="target_LeftUpperArm">(LeftUpperArm, XsensSuit::vLink::LeftUpperArm, orientationAndVelocity)</param>
+            <param name="target_LeftForeArm">(LeftForeArm, XsensSuit::vLink::LeftForeArm, orientationAndVelocity)</param>
+            <param name="target_LeftHand">(LeftHand, XsensSuit::vLink::LeftHand, orientationAndVelocity)</param>
+            <param name="target_RightUpperLeg">(RightUpperLeg, XsensSuit::vLink::RightUpperLeg, orientationAndVelocity)</param>
+            <param name="target_RightLowerLeg">(RightLowerLeg, XsensSuit::vLink::RightLowerLeg, orientationAndVelocity)</param>
+            <param name="target_RightFoot">(RightFoot, XsensSuit::vLink::RightFoot, orientationAndVelocity)</param>
+            <param name="target_RightToe">(RightToe, XsensSuit::vLink::RightToe, orientationAndVelocity)</param>
+            <param name="target_LeftUpperLeg">(LeftUpperLeg, XsensSuit::vLink::LeftUpperLeg, orientationAndVelocity)</param>
+            <param name="target_LeftLowerLeg">(LeftLowerLeg, XsensSuit::vLink::LeftLowerLeg, orientationAndVelocity)</param>
+            <param name="target_LeftFoot">(LeftFoot, XsensSuit::vLink::LeftFoot, orientationAndVelocity)</param>
+            <param name="target_LeftToe">(LeftToe, XsensSuit::vLink::LeftToe, orientationAndVelocity)</param>
+        </group>
+        <group name="CUSTOM_CONSTRAINTS">
+        <!-- check issue #132 for more info-->
+        <!-- note that a group can not be empty, otherwise it returns error-->
+        <!-- custom joint limits velocities-->
+            <param name="custom_joints_velocity_limits_names">()</param>
+            <param name="custom_joints_velocity_limits_values">()</param>
+            <!--param name="base_velocity_limit_upper_buond">(1.0, 1.0, 1.0, 1.0, 1.0, 1.0 )</param>
+            <param name="base_velocity_limit_lower_buond">(-1.0, -1.0, -1.0, -1.0, -1.0, -1.0 )</param-->
+        <!-- Custom joint Configuration constraints-->
+            <!--param name="custom_constraint_variables">()</param>
+            <param name="custom_constraint_matrix"> ()</param>
+            <param name="custom_constraint_lower_bound"> ()</param>
+            <param name="custom_constraint_upper_bound"> ()</param>
+            <param name="k_u">1.0</param>
+            <param name="k_l">1.0</param-->
+        </group>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanStateProviderLabel">XSenseIWearRemapper_2</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device>
+
+    <!--device type="human_state_wrapper" name="HumanStateWrapper">
+        <param name="period">0.1</param>
+        <param name="outputPort">/HDE/HumanStateWrapper/state:o</param>
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanStateWrapperLabel">HumanStateProvider</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="5" type="detach"/>
+    </device-->
+
+    <device type="human_state_publisher" name="HumanStatePublisher_2">
+        <param name="period">0.020</param>
+        <param name="baseTFName">/Human_2/Pelvis</param>
+        <param name="humanJointsTopic">/Human_2/joint_states</param>
+        <param name="portprefix">second</param>
+        <!--param name="fixBasePosition">(0.0 0.0 1.1)</param-->
+        <action phase="startup" level="5" type="attach">
+            <paramlist name="networks">
+                <elem name="HumanStatePublisherLabel">HumanStateProvider_2</elem>
+            </paramlist>
+        </action>
+        <action phase="shutdown" level="4" type="detach"/>
+    </device>
+
+</robot>

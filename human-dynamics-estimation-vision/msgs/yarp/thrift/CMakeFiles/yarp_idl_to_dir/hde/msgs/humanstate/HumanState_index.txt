@@ -1,0 +1,6 @@
+hde/msgs/Vector3.h
+hde/msgs/Vector3.cpp
+hde/msgs/Quaternion.h
+hde/msgs/Quaternion.cpp
+hde/msgs/HumanState.h
+hde/msgs/HumanState.cpp
